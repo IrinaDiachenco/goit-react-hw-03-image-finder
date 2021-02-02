@@ -4,7 +4,7 @@ import s from './Button.module.css';
 
 export default function Button({ onClick }) {
   return (
-    <div>
+    <div className={s.center}>
       <button type="button" className={s.Button} onClick={onClick}>
         Load more
       </button>
