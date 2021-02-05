@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { Component } from 'react';
 
-import {fetchGallery} from '../API/PixabayFetch';
+import {fetchGallery} from '../../API/PixabayFetch';
 import s from './ImageGallery.module.css';
 import Preloader from '../Loader/Loader';
 import Modal from '../Modal/Modal';
@@ -39,6 +39,7 @@ export default class ImageGallery extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevSearch = prevProps.searchQuery;
     const nextSearch = this.props.searchQuery;
+    
 
     if (prevSearch !== nextSearch) {
  
@@ -57,34 +58,33 @@ export default class ImageGallery extends Component {
     this.setState({ status: Status.PENDING });
   }
 
-updatingGallery = nextSearch => {
-    const { page } = this.state;
-    fetchGallery(nextSearch, page)
-      .then(response => {
-        if (response.hits.length === 0) {
-          this.setState({ status: Status.IDLE });
-          return toast.error('Sorry, Pictures for your request not found');
-        }
-        this.setState(
-          prevState => ({
-            gallery: [...prevState.gallery, ...response.hits],
-            status: Status.RESOLVED,
-            page: prevState.page + 1,
-          }));
-        this.scrollToBottom();
-      })
-      .catch(({ message }) =>
-        this.setState({ error: message, status: Status.REJECTED }),
-      )
-  }
+
+
+updatingGallery = (nextSearch, prevState) => {
+  const { page } = this.state;
   
-  scrollToBottom = () => {
-    if (this.state.page !== 1)
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: 'smooth',
-      });
-  };
+  fetchGallery(nextSearch, page, prevState)
+    .then(response => {
+      if (response.hits.length === 0) {
+        this.setState({ status: Status.IDLE });
+        return toast.error('not found');
+      }
+      this.setState(
+        (prevState) => ({
+          gallery: [...prevState.gallery, ...response.hits],
+          status: Status.RESOLVED,
+          page: prevState.page + 1,
+        }),
+        //this.scrollToBottom 
+        //window.scrollTo(0,(page.scrollHeight))
+      );
+    })
+    .catch(({ message }) =>
+      this.setState({ error: message, status: Status.REJECTED }),
+    )
+    .finally(() => this.scrollToBottom());
+  this.setState(prevState => ({ page: (prevState.page + 1) }));
+  }
 
   imageClickHandler = (src, alt) => {
     this.toggleModal();
@@ -102,6 +102,14 @@ updatingGallery = nextSearch => {
       showModal: !showModal,
     }));
   };
+
+      scrollToBottom = ()  => {
+    if (this.state.page !== 1)
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+  }
 
   render() {
     const { gallery, status, error, showModal, modalImage } = this.state;
@@ -128,7 +136,7 @@ updatingGallery = nextSearch => {
               webformatURL={webformatURL}
               largeImageURL={largeImageURL}
               tags={tags}
-               imageClickHandler={this.imageClickHandler}
+              imageClickHandler={this.imageClickHandler}
             />
           ))}
           </ul>

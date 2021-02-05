@@ -6,12 +6,12 @@ function ImageGalleryItem({
   webformatURL,
   largeImageURL,
   tags,
+  index,
   imageClickHandler,
 }) {
   return (
-    <li
+    <li key={index}
       className={s.item} 
-      data-large-image={largeImageURL}
       onClick={() => {
         imageClickHandler(largeImageURL, tags);
       }}
