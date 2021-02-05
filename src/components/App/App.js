@@ -17,7 +17,9 @@ export default class App extends Component {
     return (
       <div className={s.app}>
         <Searchbar onSubmit={this.handleChange} />
-        <ImageGallery searchQuery={this.state.searchQuery} />
+        <div>
+          <ImageGallery searchQuery={this.state.searchQuery} />
+        </div>
       </div>
     );
   }

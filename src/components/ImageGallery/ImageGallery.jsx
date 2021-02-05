@@ -58,8 +58,6 @@ export default class ImageGallery extends Component {
     this.setState({ status: Status.PENDING });
   }
 
-
-
 updatingGallery = (nextSearch, prevState) => {
   const { page } = this.state;
   
@@ -77,6 +75,7 @@ updatingGallery = (nextSearch, prevState) => {
         }),
         //this.scrollToBottom 
         //window.scrollTo(0,(page.scrollHeight))
+        //window.scrollByPages(1)
       );
     })
     .catch(({ message }) =>
@@ -103,9 +102,9 @@ updatingGallery = (nextSearch, prevState) => {
     }));
   };
 
-      scrollToBottom = ()  => {
+    scrollToBottom = () => {
     if (this.state.page !== 1)
-      window.scrollTo({
+    window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: "smooth",
       });
@@ -143,10 +142,11 @@ updatingGallery = (nextSearch, prevState) => {
 
           {showModal && (
           <Modal image={modalImage} toggleModal={this.toggleModal} />
-        )}
+          )}
+        
           <Button onClick={this.handleLoadMore} />
+         </div> 
           
-          </div>
       );
     }
   }
