@@ -36,14 +36,13 @@ export default class ImageGallery extends Component {
     status: Status.IDLE,
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState) {
     const prevSearch = prevProps.searchQuery;
     const nextSearch = this.props.searchQuery;
-    
 
     if (prevSearch !== nextSearch) {
  
-      this.setState({
+      await this.setState({
         gallery: [],
         page: 1,
         status: Status.PENDING
@@ -51,7 +50,18 @@ export default class ImageGallery extends Component {
 
       this.updatingGallery(nextSearch);
     }
+    if (nextSearch === prevSearch) {
+      this.scrollToBottom();
+    }
   }
+
+    scrollToBottom = () => {
+    if (this.state.page !== 1)
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+      });
+    }
 
   handleLoadMore = () => {
     this.updatingGallery(this.props.searchQuery);
@@ -72,17 +82,17 @@ updatingGallery = (nextSearch, prevState) => {
           gallery: [...prevState.gallery, ...response.hits],
           status: Status.RESOLVED,
           page: prevState.page + 1,
-        }),
-        //this.scrollToBottom 
+        }));
+      //this.scrollToBottom();
         //window.scrollTo(0,(page.scrollHeight))
         //window.scrollByPages(1)
-      );
+      
     })
     .catch(({ message }) =>
       this.setState({ error: message, status: Status.REJECTED }),
     )
-    .finally(() => this.scrollToBottom());
-  this.setState(prevState => ({ page: (prevState.page + 1) }));
+    //.finally(() => this.scrollToBottom());
+  //this.setState(prevState => ({ page: (prevState.page + 1) }));
   }
 
   imageClickHandler = (src, alt) => {
@@ -101,14 +111,6 @@ updatingGallery = (nextSearch, prevState) => {
       showModal: !showModal,
     }));
   };
-
-    scrollToBottom = () => {
-    if (this.state.page !== 1)
-    window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
-  }
 
   render() {
     const { gallery, status, error, showModal, modalImage } = this.state;
