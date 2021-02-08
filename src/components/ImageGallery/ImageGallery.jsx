@@ -9,6 +9,7 @@ import Button from "../Button/Button"
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 
 import { toast } from 'react-toastify';
+//import { FALSE } from "node-sass";
 
 const Status = {
   IDLE: 'idle',
@@ -36,9 +37,10 @@ export default class ImageGallery extends Component {
     status: Status.IDLE,
   };
 
-  async componentDidUpdate(prevProps, prevState) {
+  async componentDidUpdate(prevProps, prevState, page) {
     const prevSearch = prevProps.searchQuery;
     const nextSearch = this.props.searchQuery;
+    //const nextPage = this.state.page + 1;
 
     if (prevSearch !== nextSearch) {
  
@@ -50,13 +52,13 @@ export default class ImageGallery extends Component {
 
       this.updatingGallery(nextSearch);
     }
-    if (nextSearch === prevSearch) {
+    if (prevSearch) {
       this.scrollToBottom();
     }
   }
 
     scrollToBottom = () => {
-    if (this.state.page !== 1)
+    //if (this.updatingGallery)
     window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: "smooth",
@@ -68,10 +70,10 @@ export default class ImageGallery extends Component {
     this.setState({ status: Status.PENDING });
   }
 
-updatingGallery = (nextSearch, prevState) => {
+updatingGallery = (nextSearch) => {
   const { page } = this.state;
   
-  fetchGallery(nextSearch, page, prevState)
+  fetchGallery(nextSearch, page)
     .then(response => {
       if (response.hits.length === 0) {
         this.setState({ status: Status.IDLE });

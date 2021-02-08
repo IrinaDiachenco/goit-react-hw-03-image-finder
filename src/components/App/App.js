@@ -10,7 +10,8 @@ export default class App extends Component {
 
   handleChange = searchQuery => {
     if (searchQuery === this.state.searchQuery || searchQuery === '') return;
-    this.setState(() => ({ searchQuery }));
+    //this.setState(() => ({ searchQuery }));
+    this.setState({ searchQuery });
   };
 
   render() {
