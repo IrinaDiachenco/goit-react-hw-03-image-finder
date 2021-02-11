@@ -52,7 +52,7 @@ export default class ImageGallery extends Component {
       this.updatingGallery(nextSearch);
     }
     if (this.state.gallery !== prevState.gallery) {
-      this.scrollToBottom();
+      this.scrollToBottom(this.state.page);
     }
   }
 
