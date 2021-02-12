@@ -26,7 +26,6 @@ export default class ImageGallery extends Component {
     gallery: [],
     page: 1,
     error: null,
-
     showModal: false,
     modalImage: {
       src: "",
@@ -123,16 +122,15 @@ export default class ImageGallery extends Component {
         return <div></div>;
       }
 
-      if (status === 'pending') {
-        return <Preloader />;
-       
-      }
+      //if (status === 'pending') {
+        //return <Preloader />; 
+      //}
 
       if (status === 'rejected') {
         return <h1>{error}</h1>
       }
 
-      if (status === 'resolved') {
+      //if (status === 'resolved') {
         return (
           <div>
             <ul className={s.ImageGallery}>
@@ -145,15 +143,16 @@ export default class ImageGallery extends Component {
                 />
               ))}
             </ul>
-
             {showModal && (
               <Modal image={modalImage} toggleModal={this.toggleModal} />
             )}
-        
-            <Button onClick={this.handleLoadMore} />
+            {status === 'pending' && (
+              <Preloader />)}
+            {status === 'resolved' && (
+              <Button onClick={this.handleLoadMore} />)}
           </div>
           
         );
-      }
+      //}
     }
   }
